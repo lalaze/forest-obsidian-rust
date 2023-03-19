@@ -13,12 +13,12 @@ pub struct TreeType {
 }
 
 #[tokio::main]
-pub async fn get_tree_type() ->  Result<HashMap<u64, String>, Box<dyn std::error::Error>>  {
+pub async fn get_tree_type(forest_token: String) ->  Result<HashMap<u64, String>, Box<dyn std::error::Error>>  {
   let client = reqwest::Client::new();
 
   let res =
     client.get("https://forest-china.upwardsware.com/api/v1//tree_types?seekrua=extension_chrome-5.8.0")
-    .headers(utils::construct_headers()).send().await?;
+    .headers(utils::construct_headers(forest_token)).send().await?;
   
   let json_value: Vec<TreeType> = res.json().await?;
 

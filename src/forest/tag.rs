@@ -19,12 +19,12 @@ pub struct TagResult {
 }
 
 #[tokio::main]
-pub async fn get_tag() ->  Result<HashMap<u64, String>, Box<dyn std::error::Error>>  {
+pub async fn get_tag(forest_token: String) ->  Result<HashMap<u64, String>, Box<dyn std::error::Error>>  {
   let client = reqwest::Client::new();
 
   let data =
     client.get("https://forest-china.upwardsware.com/api/v1/tags?seekrua=extension_chrome-5.8.0")
-    .headers(utils::construct_headers()).send().await?.json::<TagResult>().await?;
+    .headers(utils::construct_headers(forest_token)).send().await?.json::<TagResult>().await?;
 
   let mut tagMap = HashMap::new();
 

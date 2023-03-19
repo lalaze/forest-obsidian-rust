@@ -34,7 +34,7 @@ pub struct Plant {
 }
 
 #[tokio::main]
-pub async fn get_plant(time: String) ->  Result<Vec<Plant>, Box<dyn std::error::Error>>  {
+pub async fn get_plant(time: String, forest_token: String) ->  Result<Vec<Plant>, Box<dyn std::error::Error>>  {
   let client = reqwest::Client::new();
 
   let mut url;
@@ -47,7 +47,7 @@ pub async fn get_plant(time: String) ->  Result<Vec<Plant>, Box<dyn std::error::
 
   let res =
     client.get(url)
-    .headers(utils::construct_headers()).send().await?;
+    .headers(utils::construct_headers(forest_token)).send().await?;
 
   let json_value: Vec<Plant> = res.json().await?;
 

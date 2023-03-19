@@ -10,39 +10,11 @@ fn format_time(time:String) -> String {
   a.to_rfc3339()
 }
 
-pub fn get_data_from_forest(time: String) -> (Vec<record::Record>, String) {
-  let mut plant_data = plant::get_plant(time).unwrap();
+pub fn get_data_from_forest(time: String, forest_token: String) -> (Vec<record::Record>, String) {
+  let mut plant_data = plant::get_plant(time, forest_token.clone()).unwrap();
   
-  // fake Data to test
-
-  // let mut plant_data = vec![plant::Plant {
-  //   id: 241469514,
-  //   tag: 11,
-  //   note: "".to_string(),
-  //   is_success: true,
-  //   start_time: "2022-11-01T08:08:05.500Z".to_string(),
-  //   end_time: "2022-11-01T08:33:05.500Z".to_string(),
-  //   created_at: "2022-11-01T08:33:15.293Z".to_string(),
-  //   updated_at: "2022-11-01T08:33:15.293Z".to_string(),
-  //   user_id: 2441855,
-  //   has_left: false,
-  //   deleted: false,
-  //   theme: 0,
-  //   cheating: false,
-  //   room_id: Some(1),
-  //   tree_type_gid: 0,
-  //   tree_count: 1,
-  //   mode: "countdown".to_string(),
-  //   trees: vec![plant::Tree {
-  //     created_at: "2022-11-01T08:33:15.293Z".to_string(),
-  //     updated_at: "2022-11-01T08:33:15.293Z".to_string(),
-  //     tree_type: 0,
-  //     is_dead: false,
-  //     phase: 4
-  //   }]
-  // }];
-  let tree_type = tree_type::get_tree_type().unwrap();
-  let tag = tag::get_tag().unwrap();
+  let tree_type = tree_type::get_tree_type(forest_token.clone()).unwrap();
+  let tag = tag::get_tag(forest_token.clone()).unwrap();
   let mut data: Vec<record::Record> = vec![];
 
   let time;
