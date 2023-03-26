@@ -1,8 +1,8 @@
 use chrono::prelude::*;
-use std::cell::RefCell;
+use chrono::{DateTime, Utc};
 mod tag;
 mod tree_type;
-mod plant;
+pub mod plant;
 mod utils;
 pub mod record;
 
@@ -12,20 +12,14 @@ fn format_time(time:String) -> String {
 }
 
 pub fn get_data_from_forest(forest_token: String) -> (Vec<record::Record>) {
-  
-  let mut plants: Vec<plant::Plant> = vec![];
   let mut time_s = "".to_string();
-
-  loop {
-    let (mut plant_data, time) = plant::get_plant(time_s, forest_token.clone()).unwrap();
-    if plant_data.is_empty() {
-      break;
-    }
-    plants.append(&mut plant_data);
-    time_s = time
-  }
-
-  print!("{}", plants.len());
+  let (mut plants, times) = plant::get_plant(time_s, forest_token.clone()).unwrap();
+  
+  plants.sort_by(|a, b| {
+    let a_time = Utc.datetime_from_str(&a.end_time.to_string(), "%Y-%m-%dT%H:%M:%S%.fZ").unwrap();
+    let b_time = Utc.datetime_from_str(&b.end_time.to_string(), "%Y-%m-%dT%H:%M:%S%.fZ").unwrap();
+    a_time.cmp(&b_time)
+  });
 
   let tree_type = tree_type::get_tree_type(forest_token.clone()).unwrap();
   let tag = tag::get_tag(forest_token.clone()).unwrap();

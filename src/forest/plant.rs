@@ -33,6 +33,12 @@ pub struct Plant {
   pub trees: Vec<Tree>
 }
 
+impl std::fmt::Display for Plant {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    write!(f, "{} {}", self.start_time, self.end_time, self.note, self.tree);
+  }
+}
+
 #[tokio::main]
 pub async fn get_plant(time: String, forest_token: String) ->  Result<(Vec<Plant>, String), Box<dyn std::error::Error>>  {
   let client = reqwest::Client::new();
