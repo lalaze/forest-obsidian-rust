@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use json::JsonValue;
 use crate::forest::utils;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -31,12 +30,6 @@ pub struct Plant {
   pub tree_count: u64,
   pub mode: String,
   pub trees: Vec<Tree>
-}
-
-impl std::fmt::Display for Plant {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, "{} {}", self.start_time, self.end_time, self.note, self.tree);
-  }
 }
 
 #[tokio::main]
