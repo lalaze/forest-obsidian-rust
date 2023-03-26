@@ -15,7 +15,7 @@ struct Args {
    #[arg(short, long)]
    password: String,
 
-   #[arg(short, long)]
+   #[arg(long)]
    filepath: String,
 }
 
@@ -30,7 +30,7 @@ fn main() {
   let args = Args::parse();
 
   // 请求数据
-  let (data, time) = forest::get_data_from_forest("".to_string(), args.forest);
+  let data = forest::get_data_from_forest(args.forest);
 
   // // 写入time
   // write_time("./config/config.csv", &config.database_id, &config.notion_token, time)

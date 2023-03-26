@@ -1,4 +1,5 @@
 use chrono::prelude::*;
+use std::cell::RefCell;
 mod tag;
 mod tree_type;
 mod plant;
@@ -10,16 +11,27 @@ fn format_time(time:String) -> String {
   a.to_rfc3339()
 }
 
-pub fn get_data_from_forest(time: String, forest_token: String) -> (Vec<record::Record>, String) {
-  let mut plant_data = plant::get_plant(time, forest_token.clone()).unwrap();
+pub fn get_data_from_forest(forest_token: String) -> (Vec<record::Record>) {
   
+  let mut plants: Vec<plant::Plant> = vec![];
+  let mut time_s = "".to_string();
+
+  loop {
+    let (mut plant_data, time) = plant::get_plant(time_s, forest_token.clone()).unwrap();
+    if plant_data.is_empty() {
+      break;
+    }
+    plants.append(&mut plant_data);
+    time_s = time
+  }
+
+  print!("{}", plants.len());
+
   let tree_type = tree_type::get_tree_type(forest_token.clone()).unwrap();
   let tag = tag::get_tag(forest_token.clone()).unwrap();
   let mut data: Vec<record::Record> = vec![];
 
-  let time;
-
-  for x in plant_data.iter() {
+  for x in plants.iter() {
     // // 构建一个新得返回
     let xx = tree_type.get(&x.trees[0].tree_type).unwrap().to_string();
     let xxx = tag.get(&x.tag).unwrap().to_string();
@@ -33,7 +45,5 @@ pub fn get_data_from_forest(time: String, forest_token: String) -> (Vec<record::
     })
   }
 
-  time = format!("{}", &plant_data[plant_data.len() - 1].end_time);
-
-  (data, time)
+  (data)
 }

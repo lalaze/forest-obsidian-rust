@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use json::JsonValue;
 use crate::forest::utils;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Tree {
   pub created_at: String,
   pub updated_at: String,
@@ -11,7 +11,7 @@ pub struct Tree {
   pub phase: u64
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Plant {
   pub id: u64,
   pub tag: u64,
@@ -34,7 +34,7 @@ pub struct Plant {
 }
 
 #[tokio::main]
-pub async fn get_plant(time: String, forest_token: String) ->  Result<Vec<Plant>, Box<dyn std::error::Error>>  {
+pub async fn get_plant(time: String, forest_token: String) ->  Result<(Vec<Plant>, String), Box<dyn std::error::Error>>  {
   let client = reqwest::Client::new();
 
   let mut url;
@@ -51,5 +51,12 @@ pub async fn get_plant(time: String, forest_token: String) ->  Result<Vec<Plant>
 
   let json_value: Vec<Plant> = res.json().await?;
 
-  Ok(json_value)
+  let time: String;
+  if !json_value.is_empty() {
+    time =  json_value[json_value.len() - 1].end_time.clone();
+  } else {
+    time = "".to_string();
+  }
+
+  Ok((json_value, time))
 }
