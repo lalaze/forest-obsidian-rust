@@ -18,8 +18,12 @@ pub struct Record {
 
 impl std::fmt::Display for Record {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, "{} {} {} {} {} {}", self.start_time, self.end_time, self.tag, self.note, self.tree_type, self.is_success)
+    write!(f, "{} {} {} {} {} {} \n", self.start_time, self.end_time, self.tag, self.note, self.tree_type, self.is_success)
   }
+}
+
+trait ToString {
+  fn to_string(&self) -> String;
 }
 
 impl ToString for Record {

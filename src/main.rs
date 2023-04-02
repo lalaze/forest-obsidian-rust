@@ -1,7 +1,6 @@
-use csv::Writer;
 mod forest;
 use clap::Parser;
-mod webdev;
+mod webdav;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -19,20 +18,12 @@ struct Args {
    filepath: String,
 }
 
-fn write_time(path: &str, database_id: &str, notion_token: &str, time: String) {
-  let mut wtr =Writer::from_path(path).unwrap();
-  wtr.write_record(&["notion_token".to_string(), "database_id".to_string(), "time".to_string()]).unwrap();
-  wtr.write_record(&[notion_token.to_string(), database_id.to_string(), time]).unwrap();
-  wtr.flush().unwrap();
-}
-
 fn main() {
   let args = Args::parse();
 
   // 请求数据
   let data = forest::get_data_from_forest(args.forest);
 
-  // // 写入time
-  // write_time("./config/config.csv", &config.database_id, &config.notion_token, time)
+  webdav::to_serve(args.user, args.password, args.filepath, data);
 
 }
